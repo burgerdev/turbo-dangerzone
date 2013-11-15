@@ -1,0 +1,12 @@
+cmake
+libtiff-dev
+libpng12-dev
+zlib1g-dev
+fftw-dev
+libfftw3-dev
+libhdf5-dev
+python
+libboost-python-dev
+python-numpy
+python-nose
+doxygen

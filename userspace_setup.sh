@@ -1,5 +1,12 @@
 #!/bin/bash
 
+if [[ `whoami` == 'root' ]]
+then
+echo "Please drop privileges before using this script."
+exit 1
+fi
+
+
 TARGETDIR=${HOME}/hci
 LOCALDIR=${HOME}/local
 PYTHONDIR=${LOCALDIR}/lib/python2.7/site-packages
