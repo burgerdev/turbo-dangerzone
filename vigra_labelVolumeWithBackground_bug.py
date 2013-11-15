@@ -10,6 +10,9 @@ def failing_vigra_test():
 	v[8:10,8:10,6:8] = 1
 	w = vigra.analysis.labelVolumeWithBackground(v)
 
+	print(v[...,6:8])
+	print(w[...,6:8])
+
 	assert w[3,3,1]>0, "Should be labeled"
 	assert w[8,8,6]>0, "Should also be labeled"
 
