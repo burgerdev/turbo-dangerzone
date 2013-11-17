@@ -39,7 +39,8 @@ remindpython ${TARGETDIR}/ilastik
 remindpython ${TARGETDIR}/volumina
 remindlib ${LIBPATH}
 
-
+if [[ ! -d vigra ]]
+then
 # VIGRA
 
 git clone https://github.com/ukoethe/vigra.git || exit $?
@@ -57,24 +58,39 @@ cmake -DCMAKE_INSTALL_PREFIX:PATH="${LOCALDIR}" -DVIGRANUMPY_INSTALL_DIR:PATH=${
 make || exit $?
 make install || exit $?
 
+cd ../.. || exit $?
+
+fi # if ! -d vigra
+
 export PYTHONPATH="$PYTHONDIR:$PYTHONPATH" || exit $?
 export LD_LIBRARY_PATH="${LIBPATH}:${LD_LIBRARY_PATH}" || exit $?
 
 python -c 'import vigra' || exit $?
 
-cd ../.. || exit $?
 
 # LAZYFLOW
 
+if [[ ! -d lazyflow ]]
+then
+
 git clone https://github.com/ilastik/lazyflow.git || exit $?
+
+fi # if ! -d lazyflow
+# FIXME hack
 
 cd lazyflow/lazyflow/drtile
 
 cmake -DVigranumpy_DIR:PATH=$LIBPATH/vigranumpy . || exit $?
+make
 
 cd ../../..
 
 export PYTHONPATH="`pwd`/lazyflow:$PYTHONPATH"
+
+for pkg in blist greenlet 
+do
+easy_install --prefix=${LOCALDIR} ${pkg} || exit $?
+done
 
 # TODO stuff missing here!
 
