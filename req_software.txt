@@ -9,4 +9,7 @@ python
 libboost-python-dev
 python-numpy
 python-nose
+python-h5py
+python-psutil
+python-setuptools
 doxygen
