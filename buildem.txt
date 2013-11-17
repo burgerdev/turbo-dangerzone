@@ -1,0 +1,20 @@
+Scanning dependencies of target test_volumelabeling
+[ 57%] Building CXX object test/volumelabeling/CMakeFiles/test_volumelabeling.dir/test.cxx.o
+[ 57%] Building CXX object test/volumelabeling/CMakeFiles/test_volumelabeling.dir/testsuccess.cxx.o
+Linking CXX executable test_volumelabeling
+Running test_volumelabeling
+Entering test suite VolumeLabelingTestSuite
+
+Failure in VolumeLabelingTest::labelingSixTest1()
+Unexpected signal: memory access violation
+
+Fatal error - aborting test suite VolumeLabelingTestSuite.
+
+make[6]: *** [test/volumelabeling/test_volumelabeling] Error 1
+make[5]: *** [test/volumelabeling/CMakeFiles/test_volumelabeling.dir/all] Error 2
+make[4]: *** [CMakeFiles/check.dir/rule] Error 2
+make[3]: *** [check] Error 2
+make[2]: *** [/home/burger/buildemdir/src/vigra-git-stamp/vigra-git-test] Error 2
+make[1]: *** [CMakeFiles/vigra-git.dir/all] Error 2
+make: *** [all] Error 2
+
