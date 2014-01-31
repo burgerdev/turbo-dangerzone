@@ -17,5 +17,13 @@ C++: gperftools
 visualization: KCacheGrind, runsnakerun
 
 
+Pandas
+======
 
+(Continuum IO)
+
+* convenience wrapper for many modules (matplotlib, pytables, numpy, h5py)
+* *and* more...
+* apparently deals with axis-tagged data
+* easy to use
 

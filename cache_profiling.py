@@ -36,6 +36,7 @@ if __name__ == "__main__":
     tracker.create_snapshot()
     cache2.BlockShape.setValue((100,100,1))
     
+    tracker.track_object(cache2._cacheFiles)
     #tracker.track_object(cache1)
     #tracker.track_object(cache2)
     
@@ -60,9 +61,9 @@ if __name__ == "__main__":
     '''
     
     #print("")
-    pprint([o for o in refs(cache2)])
+    #pprint([o for o in refs(cache2)])
     #print("")
     
     
-    #tracker.stats.print_summary()
+    tracker.stats.print_summary()
 
