@@ -36,3 +36,7 @@ nosetests.xml
 .mr.developer.cfg
 .project
 .pydevproject
+
+# data files
+*.h5
+*.hdf5
