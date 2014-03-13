@@ -1,6 +1,8 @@
 
 import unittest
 
+#import vigra
+
 import converter
 
 
@@ -18,3 +20,7 @@ class TestAll(unittest.TestCase):
     def testFromPython(self):
         c = converter.MyClass()
         c.baz((1, 2, 3))
+
+    def testInit(self):
+        c = converter.MyOtherClass((42, 43, 44))
+

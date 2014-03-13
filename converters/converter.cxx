@@ -62,12 +62,8 @@ struct MyClass
         std::cout << arg1 << ", " << arg2 << std::endl;
     }
     
-    vigra::TinyVector<int, 3>& bar(int arg1, int arg2, int arg3)
-    {
-        return *(new vigra::TinyVector<int, 3>(arg1, arg2, arg3));
-    }
     
-    void baz(vigra::TinyVector<int, 3> vec)
+    void baz(TinyVec vec)
     {
         std::cout << "Args:" << std::endl;
         for (int i=0; i<3; i++)
@@ -76,6 +72,18 @@ struct MyClass
     }
 };
 
+struct MyOtherClass
+{
+    MyOtherClass(TinyVec vec)
+    {
+        std::cout << "Args:" << std::endl;
+        for (int i=0; i<3; i++)
+            std::cout << vec[i] << ((i<2) ? ", " : "");
+        std::cout << std::endl;
+    }
+    
+    
+};
 
 
 using namespace boost::python;
@@ -88,7 +96,7 @@ BOOST_PYTHON_MODULE_INIT(converter)
     // initialize numpy and vigranumpy
     vigra::import_vigranumpy();
     
-    Convert_to_python();
+    //Convert_to_python();
 
     // export a class and its member functions
     class_<MyClass>("MyClass",
@@ -96,11 +104,12 @@ BOOST_PYTHON_MODULE_INIT(converter)
         .def("foo", &MyClass::foo,
              (arg("arg1"), arg("arg2")),
              "Documentation")
-        .def("bar", vigra::registerConverters(&MyClass::bar),
-             (arg("arg1"), arg("arg2"), arg("arg3")),
-             boost::python::return_internal_reference<1>())
-        .def("baz", vigra::registerConverters(&MyClass::baz),
+        .def("baz", &MyClass::baz,
              (arg("vec")))
+    ;
+    
+    class_<MyOtherClass>("MyOtherClass",
+        init<TinyVec>())
     ;
 
 }
