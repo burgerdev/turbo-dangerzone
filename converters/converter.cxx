@@ -85,8 +85,27 @@ struct MyOtherClass
     
 };
 
+template <class T>
+struct TemplatedClass
+{
+    TemplatedClass(T val)
+    {
+        std::cout << std::endl << val << std::endl;
+    }
+};
+
+
 
 using namespace boost::python;
+
+template <class T>
+void exportTemplatedClass()
+{
+    class_< TemplatedClass<T> >("TemplatedClass",
+        init<T>())
+    ;
+}
+
 
 // the argument of the init macro must be the module name
 BOOST_PYTHON_MODULE_INIT(converter)
@@ -112,4 +131,6 @@ BOOST_PYTHON_MODULE_INIT(converter)
         init<TinyVec>())
     ;
 
+    exportTemplatedClass<int>();
+    exportTemplatedClass<float>();
 }

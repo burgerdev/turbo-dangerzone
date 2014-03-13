@@ -24,3 +24,13 @@ class TestAll(unittest.TestCase):
     def testInit(self):
         c = converter.MyOtherClass((42, 43, 44))
 
+    def testTemplated(self):
+        c = converter.TemplatedClass(.5)
+        c = converter.TemplatedClass(15)
+
+    def testFailing(self):
+        with self.assertRaises(Exception):
+            c = converter.TemplatedClass((3,4))
+
+
+
