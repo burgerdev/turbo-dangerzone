@@ -8,12 +8,6 @@ then
 export PATH="$PATH:~/Private/bin"
 fi
 
-if [[ -d /opt/matlab/bin ]]
-then
-export PATH="$PATH:/opt/matlab/bin"
-fi
-
-
 # aliases
 
 alias grep='grep --color=auto'
@@ -30,8 +24,6 @@ alias R='R -q --vanilla'
 alias octave='octave -q'
 alias su='su -m'
 alias xvkbd='xvkbd -secure'
-alias serverlogin='ssh root@burgerdev.de'
-alias serverpass='cat /home/burger/Private/keys/root'
 alias gstat='git status'
 alias gp='git pull'
 
@@ -44,11 +36,7 @@ export GIT_PAGER=less
 export GIT_EDITOR=vim 
 
 export EDITOR=vim
-
-export MATLAB_USE_USERPATH=1
-
-##### hardware
-
+export PAGER=less
 
 
 ##### function defs
@@ -137,19 +125,6 @@ export PS4="\[\033[1;34m\][\${LINENO}]+\[\033[00m\] "
 # enable bash completion in interactive shells
 if [ -f /etc/bash_completion ] && ! shopt -oq posix; then
     . /etc/bash_completion
-fi
-
-# sudo hint
-if [ ! -e "$HOME/.sudo_as_admin_successful" ]; then
-    case " $(groups) " in *\ admin\ *)
-    if [ -x /usr/bin/sudo ]; then
-	cat <<-EOF
-	To run a command as administrator (user "root"), use "sudo <command>".
-	See "man sudo_root" for details.
-	
-	EOF
-    fi
-    esac
 fi
 
 # if the command-not-found package is installed, use it

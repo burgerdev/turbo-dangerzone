@@ -53,7 +53,7 @@ mkdir -p ${PYTHONDIR} || exit $?
 
 cd build || exit $?
 
-cmake -DCMAKE_INSTALL_PREFIX:PATH="${LOCALDIR}" -DVIGRANUMPY_INSTALL_DIR:PATH=${PYTHONDIR} .. || exit $?
+cmake -DCMAKE_INSTALL_PREFIX:PATH="${LOCALDIR}" -DVIGRANUMPY_INSTALL_DIR:PATH="${PYTHONDIR}" .. || exit $?
 
 make || exit $?
 make install || exit $?
