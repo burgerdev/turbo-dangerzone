@@ -9,50 +9,7 @@
 #include <vigra/numpy_array_converters.hxx>
 
 
-typedef vigra::TinyVector<int, 3> TinyVec;
-
-struct Convert_to_python
-{
-    Convert_to_python()
-    {
-        boost::python::converter::registry::push_back(
-            &convertible,
-            &construct,
-            boost::python::type_id<TinyVec>());
-    }
- 
-    // Determine if obj_ptr can be converted in a QString
-    static void* convertible(PyObject* obj_ptr)
-    {
-        if (!PyTuple_Check(obj_ptr)) return 0;
-        if (PyTuple_Size(obj_ptr) != 3) return 0;
-        
-        return obj_ptr;
-    }
- 
-    // Convert obj_ptr into a QString
-    static void construct(
-    PyObject* obj_ptr,
-    boost::python::converter::rvalue_from_python_stage1_data* data)
-    {
- 
-        // Grab pointer to memory into which to construct the new QString
-        void* storage = (
-        (boost::python::converter::rvalue_from_python_storage<TinyVec>*)
-        data)->storage.bytes;
-
-        // in-place construct the new QString using the character data
-        // extraced from the python object
-        
-        
-        new (storage) TinyVec(0, 0, 0);
-
-        // Stash the memory chunk pointer for later use by boost.python
-        data->convertible = storage;
-    }
-};
-
-
+typedef vigra::TinyVector<vigra::MultiArrayIndex, 3> TinyVec;
 
 struct MyClass
 {
@@ -95,6 +52,21 @@ struct TemplatedClass
 };
 
 
+struct TMClass
+{
+    TMClass() {}
+    virtual ~TMClass() {}
+    
+    template <class T>
+    T foo(T in) 
+    {
+        return 2*in;
+    }
+};
+
+
+
+
 
 using namespace boost::python;
 
@@ -106,6 +78,92 @@ void exportTemplatedClass()
     ;
 }
 
+
+template <class T>
+void exportTMClass() 
+{
+    class_< TMClass >("TMClass",
+                      init<>())
+    .def("foo", &TMClass::foo<T>, arg("arg1"))
+    ;
+}
+
+template <class T, class T2, class... Classes>
+void exportTMClass()
+{
+    class_< TMClass >("TMClass",
+                      init<>())
+    .def("foo", &TMClass::foo<T>, arg("arg1"))
+    ;
+    exportTMClass<T2, Classes...>();
+}
+
+
+class Unrelated {};
+
+
+template <class T>
+class Base
+{
+public:
+    Base() : val(0) {}
+    virtual ~Base() {};
+    
+    virtual void foo(T val) 
+    {
+        this->val = val;
+    }
+    
+    T bar() const
+    {
+        return this->val;
+    }
+    
+protected:
+    T val;
+};
+
+template <>
+class Base<Unrelated&>
+{
+public:
+    
+    virtual void foo(Unrelated val) 
+    {
+        std::cout << "*** Templated: an Unrelated object" << std::endl;
+    }
+};
+
+template <class... Args> class Interim;
+
+template <class T>
+class Interim<T> : public Base<T>
+{
+public:
+    //virtual void foo(T val);
+};
+
+template <class T, class... TRest>
+class Interim<T, TRest...> : public Interim<TRest...>, public Base<T>
+{
+public:
+    //virtual void foo(T val);
+};
+
+class Child : public Interim<int, float>
+{
+    //using Base<int>::foo;
+};
+
+void speak(const Base<int>& bla)
+{
+    std::cout << "Encountered INT " << bla.bar() << std::endl;
+}
+
+void speak(const Base<float>& bla)
+{
+    std::cout << "Encountered FLOAT " << bla.bar() << std::endl;
+}
 
 // the argument of the init macro must be the module name
 BOOST_PYTHON_MODULE_INIT(converter)
@@ -133,4 +191,17 @@ BOOST_PYTHON_MODULE_INIT(converter)
 
     exportTemplatedClass<int>();
     exportTemplatedClass<float>();
+    //exportTMClass<int>();
+    //exportTMClass<float>();
+    exportTMClass<int, float>();
+    
+    Child c;
+    Unrelated u;
+    
+    c.Base<int>::foo(1);
+    c.Base<float>::foo(.5);
+    
+    speak((Base<int>)c);
+    speak((Base<float>)c);
+    //c.foo(u);
 }

@@ -12,4 +12,8 @@ python-nose
 python-h5py
 python-psutil
 python-setuptools
+python-sip-dev
+python-qt4-dev
+python-yapsy
+qt4-dev-tools
 doxygen

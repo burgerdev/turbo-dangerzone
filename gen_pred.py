@@ -1,6 +1,8 @@
 import numpy as np
 import vigra
 
+directory = '/home/mdoering/hci/hci-data/'
+
 shape = (50, 500, 500)
 
 vol = np.zeros(shape, dtype=np.uint8)
@@ -34,5 +36,5 @@ predNull[np.logical_and(pred[..., 1] < .5, pred[..., 2] < .5)] += .8
 
 vol = vol.withAxes(*'xyz')
 pred = pred.withAxes(*'xyzc')
-vigra.writeHDF5(vol, '/home/burger/Private/Coding/hci/hci-data/test/data.h5', '/data')
-vigra.writeHDF5(pred, '/home/burger/Private/Coding/hci/hci-data/test/pred.h5', '/data')
+vigra.writeHDF5(vol, directory + 'data.h5', '/data')
+vigra.writeHDF5(pred, directory + 'pred.h5', '/data')

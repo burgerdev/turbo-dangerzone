@@ -87,7 +87,7 @@ cd ../../..
 
 export PYTHONPATH="`pwd`/lazyflow:$PYTHONPATH"
 
-for pkg in blist greenlet h5py==2.2.1
+for pkg in blist greenlet "h5py==2.2.1" faulthandler qimage2ndarray
 do
 easy_install --prefix=${LOCALDIR} ${pkg} || exit $?
 done

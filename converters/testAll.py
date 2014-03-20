@@ -32,5 +32,10 @@ class TestAll(unittest.TestCase):
         with self.assertRaises(Exception):
             c = converter.TemplatedClass((3,4))
 
+    def testTM(self):
+        c = converter.TMClass()
+        print(c.foo(.3))
+        print(c.foo(3))
+
 
 
