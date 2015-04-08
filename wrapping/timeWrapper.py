@@ -1,5 +1,5 @@
 
-import timeit
+import time
 
 import numpy as np
 import vigra
@@ -14,6 +14,7 @@ from lazyflow.operators import OpMultiArraySlicer2, OpMultiArrayStacker
 
 class OpZero(Operator):
     Shape = InputSlot()
+    Nothing = InputSlot(optional=True)
     Output = OutputSlot()
 
     def setupOutputs(self):
@@ -46,7 +47,26 @@ class OpSimple(Operator):
         result[...] = self.Input.get(roi).wait() + 1
 
 
-def runSingleWrapped(n, justSetup=True):
+class MinTimer(object):
+    '''
+    keep track of the minimal elapsed time of a series of time
+    measurements
+    (note that the minimum of a time series tells us more about the
+    actual code complexity than the average, which can be biased by
+    cpu spikes etc.)
+    '''
+    t = np.inf
+    _t = 0
+    def __enter__(self):
+        self._t = -time.time()
+
+    def __exit__(self, *args):
+        self._t += time.time()
+        if self._t < self.t:
+            self.t = self._t
+
+
+def create(n):
     g = Graph()
     opProvider = OpZero(graph=g)
     slicer = OpMultiArraySlicer2(graph=g)
@@ -64,36 +84,19 @@ def runSingleWrapped(n, justSetup=True):
 
     opProvider.Shape.setValue((n, 1024, 1024))
 
-    if justSetup:
-        return
+    return opProvider, slicer, wrapped, stacker
 
-def timeSetup():
+def timeSetup(lenSeries=10):
     r = []
-    for i in range(1, 20):
-        stmt = "runSingleWrapped({})".format(i)
-        t = timeit.timeit(
-            stmt=stmt, number=1,
-            setup="from timeWrapper import runSingleWrapped")
-        r.append((i, t))
+    for n in range(1, 20):
+        prov = create(n)[0]
+        T = MinTimer()
+        for s in range(lenSeries):
+            with T:
+                prov.Nothing.setValue(s % 2)
+        r.append((n, T.t))
+    return np.asarray(r)
 
-    # return np.asarray(r)
-
-    for i in range(20, 300, 10):
-        stmt = "runSingleWrapped({})".format(i)
-        t = timeit.timeit(
-            stmt=stmt, number=1,
-            setup="from timeWrapper import runSingleWrapped")
-        r.append((i, t))
-
-    for i in range(300, 2000, 100):
-        stmt = "runSingleWrapped({})".format(i)
-        t = timeit.timeit(
-            stmt=stmt, number=1,
-            setup="from timeWrapper import runSingleWrapped")
-        r.append((i, t))
-
-    x = np.asarray(r)
-    return x
 
 if __name__ == "__main__":
     from matplotlib import pyplot as plt
